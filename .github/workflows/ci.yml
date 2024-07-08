@@ -27,7 +27,7 @@ jobs:
     name: Unit Tests
     steps:
       - uses: actions/checkout@v4
-      - uses: eifinger/setup-rye@v3
+      - uses: eifinger/setup-rye@v4
         with:
           version: '0.34.0'
       - run: rye fetch
