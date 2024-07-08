@@ -1,8 +1,11 @@
 import pytest
-
 from boto3 import client
-from can_i_stack_it.domain.model import ActionPermission, Action, PermissionStatus
-from can_i_stack_it.adapters import iam
+from cloudformation_permissions.adapters import iam
+from cloudformation_permissions.domain.model import (
+    Action,
+    ActionPermission,
+    Authorized,
+)
 
 
 @pytest.mark.parametrize(
@@ -14,9 +17,7 @@ from can_i_stack_it.adapters import iam
                 "sts:GetCallerIdentity",
             ],
             [
-                ActionPermission(
-                    Action("sts:GetCallerIdentity"), PermissionStatus.ALLOWED
-                ),
+                ActionPermission(Action("sts:GetCallerIdentity"), Authorized.ALLOWED),
             ],
         ),
         (
@@ -25,7 +26,7 @@ from can_i_stack_it.adapters import iam
                 "ec2:RunInstances",
             ],
             [
-                ActionPermission(Action("ec2:RunInstances"), PermissionStatus.DENIED),
+                ActionPermission(Action("ec2:RunInstances"), Authorized.DENIED),
             ],
         ),
         (
@@ -35,10 +36,8 @@ from can_i_stack_it.adapters import iam
                 "ec2:RunInstances",
             ],
             [
-                ActionPermission(
-                    Action("sts:GetCallerIdentity"), PermissionStatus.ALLOWED
-                ),
-                ActionPermission(Action("ec2:RunInstances"), PermissionStatus.DENIED),
+                ActionPermission(Action("sts:GetCallerIdentity"), Authorized.ALLOWED),
+                ActionPermission(Action("ec2:RunInstances"), Authorized.DENIED),
             ],
         ),
     ],

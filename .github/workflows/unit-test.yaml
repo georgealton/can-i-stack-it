@@ -1,0 +1,27 @@
+name: Test
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+env:
+  # GitHub Actions Runner is not a tty therefore lots of tools disable colour
+  # The webview supports ANSI colour so we try to add colour support here
+  #| env var                         | supported by      |
+  FORCE_COLOR: "true"                # nox,pip,pytest,mypy
+  PRE_COMMIT_COLOR: "always"         # pre-commit
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    name: Unit Tests
+    steps:
+      - uses: actions/checkout@v4
+      - uses: eifinger/setup-rye@v4
+        with:
+          version: '0.34.0'
+      - run: rye fetch
+      - run: rye sync --no-lock
+      - run: rye run nox --python ${{matrix.python-version}}
+

@@ -1,22 +1,24 @@
-# can-i-stack-it
+# CloudFormation Permissions
 
 Check if your CloudFormation Template can be deployed by a Role.
 
 ## Use Me
 
-To generate findings, iam-sarif-report makes AWS API requests. The AWS Principal you use must be allowed to use the `access-analyzer:ValidatePolicy` command.
+To generate reports, cloudformation-permissions makes AWS API requests. The
+following statement includes the Actions required to make this work with you
+IAM Principal
 
 ```json
 {
     "Effect": "Allow",
-    "Action":[
-        "sts:GetCallerIdentity",
+    "Action": [
+        "sts:GetCallerIdentity"
     ],
     "Resource": "*"
 },
 {
     "Effect": "Allow",
-    "Action":[
+    "Action": [
         "iam:GetContextKeysForPrincipalPolicy",
         "iam:SimulatePrincipalPolicy"
     ],
@@ -24,7 +26,7 @@ To generate findings, iam-sarif-report makes AWS API requests. The AWS Principal
 },
 {
     "Effect": "Allow",
-    "Action":[
+    "Action": [
         "cloudformation:GetTemplate",
         "cloudformation:ListStackResources"
     ],
@@ -34,36 +36,84 @@ To generate findings, iam-sarif-report makes AWS API requests. The AWS Principal
 
 ### GitHub Action
 
-See the [action.yaml](action.yaml) for detailed usage information.
-
-```yaml
-on: [push]
-jobs:
-  example:
-    permissions:
-      id-token: write
-      actions: read
-      contents: read
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      # setup aws access
-      - uses: aws-actions/configure-aws-credentials@v3
-        with:
-          role-to-assume: arn:aws:iam::111111111111:role/my-github-actions-role-test
-          aws-region: eu-west-1
-
-      - uses: georgealton/can-i-stack-it@v2
-```
-
 ### Locally
 
 ```sh
-pipx run can-i-stack-it --template-source '' verify --role-arn ''
+$ pipx run cloudformation-permissions resource 'AWS::IAM::Role' permissions
+iam:CreateRole
+iam:UpdateRole
+iam:DeleteRole
+iam:PutRolePermissionsBoundary
+iam:DeleteRolePermissionsBoundary
+iam:TagRole
+iam:GetRole
+iam:ListRoles
+iam:UpdateRoleDescription
+iam:DeleteRolePolicy
+iam:ListRolePolicies
+iam:AttachRolePolicy
+iam:DetachRolePolicy
+iam:UpdateAssumeRolePolicy
+iam:PutRolePolicy
+iam:GetRolePolicy
+iam:ListAttachedRolePolicies
+iam:UntagRole
 ```
 
+```sh
+$ pipx run cloudformation-permissions resource 'AWS::IAM::Role' permissions --output tree
+AWS::IAM::Role
+├── iam:CreateRole
+├── iam:UpdateRole
+├── iam:DeleteRole
+├── iam:PutRolePermissionsBoundary
+├── iam:DeleteRolePermissionsBoundary
+├── iam:TagRole
+├── iam:GetRole
+├── iam:ListRoles
+├── iam:UpdateRoleDescription
+├── iam:DeleteRolePolicy
+├── iam:ListRolePolicies
+├── iam:AttachRolePolicy
+├── iam:DetachRolePolicy
+├── iam:UpdateAssumeRolePolicy
+├── iam:PutRolePolicy
+├── iam:GetRolePolicy
+├── iam:ListAttachedRolePolicies
+└── iam:UntagRole
+```
+
+```sh
+$ pipx run cloudformation-permissions template 'tests/data/template.cfn.yaml' permissions --output tree
+tests/integration/data/template.yaml
+└── Example
+    └── AWS::IAM::Role
+        ├── iam:AttachRolePolicy
+        ├── iam:CreateRole
+        ├── iam:DeleteRole
+        ├── iam:DeleteRolePermissionsBoundary
+        ├── iam:DeleteRolePolicy
+        ├── iam:DetachRolePolicy
+        ├── iam:GetRole
+        ├── iam:GetRolePolicy
+        ├── iam:ListAttachedRolePolicies
+        ├── iam:ListRolePolicies
+        ├── iam:ListRoles
+        ├── iam:PutRolePermissionsBoundary
+        ├── iam:PutRolePolicy
+        ├── iam:TagRole
+        ├── iam:UntagRole
+        ├── iam:UpdateAssumeRolePolicy
+        ├── iam:UpdateRole
+        └── iam:UpdateRoleDescription
+```
+
+```sh
+pipx run cloudformation-permissions template 'tests/data/template.cfn.yaml' verify 'arn:aws:iam:::role/example'
+```
 ## Limitations
+
+### Modules are not supported
 
 ### Simulation of resource-based policies isn't supported for IAM roles.
 

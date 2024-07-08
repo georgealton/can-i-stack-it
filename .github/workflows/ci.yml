@@ -1,9 +1,7 @@
-name: Continuous Integration
+name: Review
 
 on:
-  push:
-    # branches-ignore:
-    #   - main
+  pull_request_target:
 
 env:
   # GitHub Actions Runner is not a tty therefore lots of tools disable colour
@@ -21,20 +19,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Install the latest version of rye
+        uses: eifinger/setup-rye@v4
+      - name: lint
+        run: rye lint
 
-  unit-tests:
-    runs-on: ubuntu-latest
-    name: Unit Tests
-    steps:
-      - uses: actions/checkout@v4
-      - uses: eifinger/setup-rye@v3
-        with:
-          version: '0.34.0'
-      - run: rye fetch
-      - run: rye sync --no-lock
-      - run: rye run nox --python ${{matrix.python-version}}
 
-  github-actions-integration-tests:
+  integration-tests:
     runs-on: ubuntu-latest
     name: GitHub Actions Integration Tests
     permissions:

@@ -7,43 +7,69 @@
 #   all-features: false
 #   with-sources: false
 #   generate-hashes: false
+#   universal: false
 
 -e file:.
 annotated-types==0.7.0
     # via pydantic
-attrs==23.2.0
+attrs==24.2.0
+    # via cloudformation-permissions
     # via jsonschema
     # via referencing
-aws-sam-translator==1.89.0
-    # via can-i-stack-it
+aws-sam-translator==1.91.0
+    # via cfn-lint
+    # via cloudformation-permissions
 boto3==1.34.116
     # via aws-sam-translator
-    # via can-i-stack-it
+    # via cloudformation-permissions
 botocore==1.34.116
     # via boto3
     # via s3transfer
+cfn-lint==1.12.4
+    # via cloudformation-permissions
 click==8.1.7
-    # via can-i-stack-it
+    # via cloudformation-permissions
 jmespath==1.0.1
     # via boto3
     # via botocore
+jsonpatch==1.33
+    # via cfn-lint
+jsonpointer==3.0.0
+    # via jsonpatch
 jsonschema==4.22.0
     # via aws-sam-translator
 jsonschema-specifications==2023.12.1
     # via jsonschema
+markdown-it-py==3.0.0
+    # via rich
+mdurl==0.1.2
+    # via markdown-it-py
+mpmath==1.3.0
+    # via sympy
+networkx==3.3
+    # via cfn-lint
 punq==0.7.0
-    # via can-i-stack-it
+    # via cloudformation-permissions
 pydantic==2.7.2
     # via aws-sam-translator
 pydantic-core==2.18.3
     # via pydantic
+pygments==2.18.0
+    # via rich
 python-dateutil==2.9.0.post0
     # via botocore
 pyyaml==6.0.1
-    # via can-i-stack-it
+    # via cfn-lint
+    # via cloudformation-permissions
 referencing==0.35.1
     # via jsonschema
     # via jsonschema-specifications
+regex==2024.7.24
+    # via cfn-lint
+result==0.17.0
+    # via cloudformation-permissions
+rich==13.8.1
+    # via cloudformation-permissions
 rpds-py==0.18.1
     # via jsonschema
     # via referencing
@@ -51,8 +77,11 @@ s3transfer==0.10.1
     # via boto3
 six==1.16.0
     # via python-dateutil
+sympy==1.13.2
+    # via cfn-lint
 typing-extensions==4.12.0
     # via aws-sam-translator
+    # via cfn-lint
     # via pydantic
     # via pydantic-core
 urllib3==2.2.1
