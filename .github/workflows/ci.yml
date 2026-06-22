@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Static Analysis
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
@@ -35,7 +35,7 @@ jobs:
       contents: read
     environment: main
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: arn:aws:iam::531249009620:role/Deploy
